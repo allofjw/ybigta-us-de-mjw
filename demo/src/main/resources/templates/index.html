@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원의 정보</title>
+</head>
+<body>
+<h1>ID: <span th:text="${user.id}"></span></h1>
+<p>Email: <span th:text="${user.email}"></span></p>
+
+<form th:action="@{|/${user.id}|}" method="post">
+</form>
+</body>
+</html>
