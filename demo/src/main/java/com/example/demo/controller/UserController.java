@@ -1,5 +1,7 @@
-package com.example.demo.domain;
+package com.example.demo.controller;
 
+import com.example.demo.domain.User;
+import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +22,7 @@ public class UserController{
                 .password(req.getPassword())
                 .build();
 
-        return userService.insert(user);
+        return userService.insert(user); //DB에 user정보 저장하기
     }
 
 }
