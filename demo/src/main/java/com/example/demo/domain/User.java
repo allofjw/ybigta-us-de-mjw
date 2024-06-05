@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Builder
+
 @Table(name="user")
 public class User {
 
@@ -20,12 +20,22 @@ public class User {
 
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
     public User() {
     }
-
-    public User(Integer id, String email, String password) {
+    @Builder
+    public User(Integer id, String email, String password, UserRole role) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.role = role;
+    }
+
+    // getters and setters for id, name, email, role
+
+    public String gotUserRoleKey() {
+        return this.role.getKey();
     }
 }
