@@ -1,0 +1,9 @@
+<!-- 로그인 기능 영역 -->
+<div th:unless="${email}">
+    <a th:href="@{/oauth2/authorization/google}" class="btn btn-success active" role="button">Google Login</a>
+</div>
+<!-- 로그아웃 기능 영역 -->
+<div th:if="${email}">
+    Logged in as : <span id="user" th:text="${email}"></span>
+    <a th:href="@{/logout}" class="btn btn-info active" role="button">Logout</a>
+</div>
