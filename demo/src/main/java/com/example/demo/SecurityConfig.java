@@ -1,45 +1,47 @@
 package com.example.demo;
 
 
+import com.example.demo.service.CustomOAuth2UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+    @Autowired
+    CustomOAuth2UserService customOAuth2UserService;
+
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/signup","/**").permitAll()// /signup 경로, /{id}에 대한 접근 허용
+    protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests(authorizeRequests -> {
+                    authorizeRequests.requestMatchers("/").permitAll();//모두에게 허용되는 페이지
+                    authorizeRequests.requestMatchers("/login").permitAll(); // 모두에게 허용되는 페이지
+                    authorizeRequests.requestMatchers("/user").hasRole("USER");//user role이 있어야지만 허용하도록
+                    authorizeRequests.anyRequest().authenticated();
+                })
+                .exceptionHandling(exceptionHandling ->
+                        exceptionHandling.accessDeniedPage("/accessDenied")
                 )
-                .formLogin(formLogin ->
-                        formLogin
-                                .loginPage("/users/login")
-                                .loginProcessingUrl("/users/login")
-                                .defaultSuccessUrl("/home",true)
-                                .permitAll()
+                .logout(logout ->
+                        logout.logoutUrl("/logout")
+                                .logoutSuccessUrl("/")
                 )
-                .csrf().disable();
-        return http.build()
+                .csrf(csrf -> csrf.disable())
+                .oauth2Login(oauth2Login ->
+                        oauth2Login.loginPage("/login")
+                                .defaultSuccessUrl("/home", true)
+                                .userInfoEndpoint(userInfoEndpoint ->
+                                        userInfoEndpoint.userService(customOAuth2UserService)
+                                )
+                )
                 ;
 
-    }
-
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-    @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+        return http.build();
     }
 }

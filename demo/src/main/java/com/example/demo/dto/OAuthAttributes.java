@@ -1,7 +1,6 @@
-package com.example.demo.config.auth.dto;
+package com.example.demo.dto;
 
 import com.example.demo.domain.User;
-import com.example.demo.domain.UserRole;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -37,7 +36,7 @@ public class OAuthAttributes {
     public User toEntity() {
         return User.builder()
                 .email(email)
-                .role(UserRole.USER)
+                .role(Role.ROLE_USER)
                 .build();
     }
 }
