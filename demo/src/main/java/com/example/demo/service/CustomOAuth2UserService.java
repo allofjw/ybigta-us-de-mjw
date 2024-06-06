@@ -23,8 +23,6 @@ import java.util.Map;
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
-    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
-     logger.info("in getLoginPage2");
 
     private final UserRepository userRepository;
     private final HttpSession httpSession;
@@ -40,7 +38,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        logger.info("Registration ID: " + registrationId);
 
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
 
